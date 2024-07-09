@@ -141,6 +141,8 @@ export class Rolling extends State {
 			this.game.player.setState(STATES.DIVING, 0);
 		} else if (this.game.player.overheated && this.game.player.onGround()) {
 			this.game.player.setState(STATES.RUNNING, 1);
+		} else if (this.game.player.overheated && !this.game.player.onGround()) {
+			this.game.player.setState(STATES.FALLING, 1);
 		}
 	}
 }

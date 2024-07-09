@@ -42,6 +42,7 @@ window.addEventListener('load', () => {
 			this.player.currentState.enter();
 		}
 		update(deltaTime) {
+			console.log(this.player.y);
 			this.maxTime -= deltaTime;
 			if (this.maxTime <= 0) {
 				this.maxTime = 0;

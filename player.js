@@ -18,6 +18,10 @@ export default class Player {
 		this.height = 91.3;
 		this.x = this.width;
 		this.y = this.game.height - this.height - this.game.groundMargin;
+		this.minX = 0;
+		this.minY = -this.height;
+		this.maxX = this.game.width - this.width;
+		this.maxY = this.game.height - this.height - this.game.groundMargin;
 		this.frameX = 0;
 		this.frameY = 0;
 		this.speed = 0;
@@ -149,17 +153,13 @@ export default class Player {
 		} else this.speed = 0;
 
 		//horizontal boundaries
-		if (this.x < 0) this.x = 0;
-		else if (this.x > this.game.width - this.width)
-			this.x = this.game.width - this.width;
+		this.x = Math.max(this.minX, Math.min(this.x, this.maxX));
 
 		//vertical movement
 		this.y += this.vy;
 
 		//vertical boundaries
-		if (this.y > this.game.height - this.height - this.game.groundMargin) {
-			this.y = this.game.height - this.height - this.game.groundMargin;
-		}
+		this.y = Math.max(this.minY, Math.min(this.y, this.maxY));
 		//to simulate gravity
 		if (!this.onGround()) {
 			this.vy += this.weight;
