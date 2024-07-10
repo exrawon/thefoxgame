@@ -130,8 +130,6 @@ window.addEventListener('load', () => {
 			if (this.speed > 0 && Math.random() < 0.5) {
 				this.enemies.push(new GroundEnemy(this));
 			} else if (this.speed > 0) this.enemies.push(new ClimbingEnemy(this));
-
-			// console.log(this.enemies);
 		}
 		addText() {
 			if (this.score === 0 && this.backgroundText.length < 1) {

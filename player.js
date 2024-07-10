@@ -9,7 +9,6 @@ import {
 } from './playerStates.js';
 import { CollisionAnimation } from './collisionAnimation.js';
 import { FloatingMessage } from './floatingMessages.js';
-import { BackgroundText } from './background.js';
 
 export default class Player {
 	constructor(game) {
@@ -210,6 +209,10 @@ export default class Player {
 					this.currentState === this.states[5]
 				) {
 					this.game.score++;
+					if (this.game.score >= this.game.winningScore) {
+						this.game.gameOver = true;
+					}
+
 					if (this.energy < this.maxEnergy) {
 						this.energy += 1000;
 						if (this.energy > this.maxEnergy) {

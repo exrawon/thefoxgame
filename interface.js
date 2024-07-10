@@ -37,7 +37,7 @@ export class UserInterface {
 
 			if (this.game.score >= this.game.winningScore) {
 				context.save();
-				context.globalAlpha = 0.5;
+				context.globalAlpha = 0.8;
 				context.fillStyle = 'seashell';
 				context.fillRect(0, 0, this.game.width, this.game.height);
 				context.restore();

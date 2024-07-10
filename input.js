@@ -18,7 +18,6 @@ export default class InputHandler {
 				this.game.debug = !this.game.debug;
 				console.log(this.game.debug ? 'Debug Mode: ON' : 'Debug Mode: OFF');
 			}
-			// console.log(e.key, this.keys);
 		});
 		window.addEventListener('keyup', (e) => {
 			if (
@@ -31,7 +30,6 @@ export default class InputHandler {
 			) {
 				this.keys.splice(this.keys.indexOf(e.key), 1);
 			}
-			// console.log(this.keys);
 		});
 	}
 }
