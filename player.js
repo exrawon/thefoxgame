@@ -9,6 +9,7 @@ import {
 } from './playerStates.js';
 import { CollisionAnimation } from './collisionAnimation.js';
 import { FloatingMessage } from './floatingMessages.js';
+import { BackgroundText } from './background.js';
 
 export default class Player {
 	constructor(game) {
@@ -32,9 +33,9 @@ export default class Player {
 		this.maxEnergy = 10000;
 		this.overheated = false;
 		this.recoveryTimer = 0;
-		this.recoverInterval = 5000;
+		this.recoverInterval = 7000;
 		this.maxFrame = 4;
-		this.fps = 20;
+		this.fps = 15;
 		this.frameTimer = 0;
 		this.frameInterval = 1000 / this.fps;
 		this.states = [
@@ -111,6 +112,7 @@ export default class Player {
 		//draw overheat
 		if (this.overheated) {
 			context.save();
+
 			context.fillStyle = `black`;
 			context.fillText(`OVERHEAT!`, this.x + 10, this.y - 5);
 			context.fillStyle = `red`;
@@ -167,13 +169,14 @@ export default class Player {
 
 		//energy system
 		if (this.currentState === this.states[4] && this.energy > 0) {
-			this.energy -= deltaTime * 2;
+			this.energy -= deltaTime * 2.5;
 		} else if (
 			this.currentState !== this.states[4] &&
 			this.energy < this.maxEnergy
 		) {
-			this.energy += deltaTime * 2;
+			this.energy += deltaTime * 1.5;
 		}
+		this.energy = Math.max(0, Math.min(this.energy, this.maxEnergy));
 	}
 
 	onGround() {
@@ -208,7 +211,7 @@ export default class Player {
 				) {
 					this.game.score++;
 					if (this.energy < this.maxEnergy) {
-						this.energy += 500;
+						this.energy += 1000;
 						if (this.energy > this.maxEnergy) {
 							this.energy = this.maxEnergy;
 						}

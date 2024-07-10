@@ -3,6 +3,7 @@ import InputHandler from './input.js';
 import { Background } from './background.js';
 import { FlyingEnemy, GroundEnemy, ClimbingEnemy } from './enemies.js';
 import { UserInterface } from './interface.js';
+import { BackgroundText } from './background.js';
 
 /** @type {HTMLCanvasElement} */
 window.addEventListener('load', () => {
@@ -10,6 +11,8 @@ window.addEventListener('load', () => {
 	const ctx = canvas.getContext('2d');
 	canvas.width = 1000;
 	canvas.height = 500;
+	const fps = 60;
+	const frameInterval = 1000 / fps;
 
 	class Game {
 		constructor(width, height) {
@@ -26,16 +29,17 @@ window.addEventListener('load', () => {
 			this.particles = [];
 			this.collisions = [];
 			this.floatingMessages = [];
+			this.backgroundText = [];
 			this.maxParticles = 200;
 			this.enemyTimer = 0;
-			this.enemyInterval = 1000;
+			this.enemyInterval = 1500;
 			this.debug = false;
 			this.score = 0;
-			this.winningScore = 69;
+			this.winningScore = 100;
 			this.fontColor = 'black';
 			this.fontColorAlt = 'deeppink';
 			this.time = 0;
-			this.maxTime = 60000;
+			this.maxTime = 100000;
 			this.gameOver = false;
 			this.lives = 3;
 			this.player.currentState = this.player.states[0];
@@ -49,6 +53,15 @@ window.addEventListener('load', () => {
 			}
 			this.player.update(this.input.keys, deltaTime);
 			this.background.update();
+
+			//handle backgroundtext
+			this.addText();
+			this.backgroundText.forEach((text, index) => {
+				text.update();
+			});
+			this.backgroundText = this.backgroundText.filter(
+				(text) => !text.markedForDeletion
+			);
 
 			//handle enemies
 			if (this.enemyTimer > this.enemyInterval) {
@@ -91,6 +104,9 @@ window.addEventListener('load', () => {
 		}
 		draw(context) {
 			this.background.draw(context);
+			this.backgroundText.forEach((text) => {
+				text.draw(context);
+			});
 			this.player.draw(context);
 			this.enemies.forEach((enemy) => {
 				enemy.draw(context);
@@ -107,26 +123,44 @@ window.addEventListener('load', () => {
 			this.userinterface.draw(context);
 		}
 		addEnemy() {
-			this.enemies.push(new FlyingEnemy(this));
+			if (this.speed > 0) {
+				this.enemies.push(new FlyingEnemy(this));
+			}
+
 			if (this.speed > 0 && Math.random() < 0.5) {
 				this.enemies.push(new GroundEnemy(this));
 			} else if (this.speed > 0) this.enemies.push(new ClimbingEnemy(this));
 
 			// console.log(this.enemies);
 		}
+		addText() {
+			if (this.score === 0 && this.backgroundText.length < 1) {
+				this.backgroundText.unshift(
+					new BackgroundText(this, 'Kill 100 enemies before the time runs out!')
+				);
+			} else if (
+				this.score === this.winningScore * 0.9 &&
+				this.backgroundText.length < 1
+			) {
+				this.backgroundText.unshift(new BackgroundText(this, 'Almost there!'));
+			}
+		}
 	}
 	const game = new Game(canvas.width, canvas.height);
 
 	let lastTime = 0;
 	const animate = (timestamp) => {
-		const deltaTime = timestamp - lastTime;
-		lastTime = timestamp;
-		ctx.clearRect(0, 0, canvas.width, canvas.height);
-		game.update(deltaTime);
-		game.draw(ctx);
-
 		if (!game.gameOver) requestAnimationFrame(animate);
-		// console.log(deltaTime);
+		const deltaTime = timestamp - lastTime;
+
+		if (deltaTime < frameInterval) return;
+		ctx.clearRect(0, 0, canvas.width, canvas.height);
+		game.draw(ctx);
+		game.update(deltaTime);
+
+		const excessTime = deltaTime % frameInterval;
+		lastTime = timestamp - excessTime;
 	};
+
 	animate(0);
 });

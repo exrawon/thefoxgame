@@ -90,3 +90,41 @@ export class Background {
 		});
 	}
 }
+
+export class BackgroundText {
+	constructor(game, value) {
+		this.game = game;
+		this.fontSize = 35;
+		this.fontFamily = 'Teko';
+		this.value = value;
+		this.markedForDeletion = false;
+		this.x = 0;
+		this.minX = -this.game.width * 3;
+	}
+	draw(context) {
+		//draw objective
+		context.save();
+		context.textAlign = 'left';
+		context.font = `bold ${this.fontSize * 2}px ${this.fontFamily} `;
+		context.fillStyle = this.game.fontColor;
+		context.fillText(
+			this.value,
+			this.game.width + this.x,
+			this.game.height * 0.5
+		);
+		context.fillStyle = this.game.fontColorAlt;
+		context.fillText(
+			this.value,
+			this.game.width + 1 + this.x,
+			this.game.height * 0.5 + 1
+		);
+		context.restore();
+	}
+	update() {
+		this.x -= this.game.speed;
+		this.x = Math.max(this.minX, Math.min(this.x, this.game.width));
+		if (this.x <= this.minX) {
+			this.markedForDeletion = true;
+		}
+	}
+}

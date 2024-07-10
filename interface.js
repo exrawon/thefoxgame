@@ -4,6 +4,7 @@ export class UserInterface {
 		this.fontSize = 35;
 		this.fontFamily = 'Teko';
 		this.livesImage = lives;
+		this.x = 0;
 	}
 	draw(context) {
 		context.save();
@@ -35,7 +36,12 @@ export class UserInterface {
 			context.textAlign = 'center';
 
 			if (this.game.score >= this.game.winningScore) {
-				context.font = `bold ${this.fontSize * 2}px ${this.fontFamily} `;
+				context.save();
+				context.globalAlpha = 0.5;
+				context.fillStyle = 'seashell';
+				context.fillRect(0, 0, this.game.width, this.game.height);
+				context.restore();
+				context.font = `bold ${this.fontSize * 2.5}px ${this.fontFamily} `;
 				context.fillStyle = this.game.fontColor;
 				context.fillText(
 					`Hell Yeah!`,
@@ -64,14 +70,20 @@ export class UserInterface {
 					this.game.height * 0.5 + 41
 				);
 			} else {
-				context.font = `bold ${this.fontSize * 2}px ${this.fontFamily} `;
-				context.fillStyle = this.game.fontColor;
+				context.save();
+				context.globalAlpha = 0.8;
+				context.fillStyle = 'black';
+				context.fillRect(0, 0, this.game.width, this.game.height);
+				context.restore();
+
+				context.font = `bold ${this.fontSize * 2.5}px ${this.fontFamily} `;
+				context.fillStyle = 'black';
 				context.fillText(
 					`Game Over`,
 					this.game.width * 0.5,
 					this.game.height * 0.5
 				);
-				context.fillStyle = this.game.fontColorAlt;
+				context.fillStyle = 'white';
 				context.fillText(
 					`Game Over`,
 					this.game.width * 0.5 + 1,
@@ -86,7 +98,7 @@ export class UserInterface {
 					this.game.height * 0.5 + 40
 				);
 
-				context.fillStyle = this.game.fontColorAlt;
+				context.fillStyle = 'white';
 				context.fillText(
 					`Better luck next time...`,
 					this.game.width * 0.5 + 1,
